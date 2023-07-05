@@ -1,15 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class SwipeController : MonoBehaviour
 {
+    bool isDraging = false;
+    Vector2 startTouch, swipeDelta;
+
     public static bool tap, swipeLeft, swipeRight, swipeUp, swipeDown;
-    private bool isDraging = false;
-    private Vector2 startTouch, swipeDelta;
 
     private void Update()
     {
         tap = swipeDown = swipeUp = swipeLeft = swipeRight = false;
+
         #region ΟΚ-βεπρθÿ
         if (Input.GetMouseButtonDown(0))
         {
