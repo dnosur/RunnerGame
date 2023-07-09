@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4111263, g: 0.3770277, b: 0.43431866, a: 1}
+  m_IndirectSpecularColor: {r: 0.41177785, g: 0.37733534, b: 0.433869, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -266,7 +266,7 @@ MonoBehaviour:
   m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 42df1c7856584b6b8db9a509b6b10074, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -410,7 +410,7 @@ PrefabInstance:
     - target: {fileID: 4842540522386455266, guid: 678d5f9da88056847a69720bdff65bbd, type: 3}
       propertyPath: head
       value: 
-      objectReference: {fileID: 1838812687}
+      objectReference: {fileID: 0}
     - target: {fileID: 4842540522386455266, guid: 678d5f9da88056847a69720bdff65bbd, type: 3}
       propertyPath: speed
       value: 5
@@ -1495,11 +1495,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823159862}
   m_CullTransparentMesh: 1
---- !u!1 &1838812687 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4737618429660451152, guid: 678d5f9da88056847a69720bdff65bbd, type: 3}
-  m_PrefabInstance: {fileID: 367538863}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1841783325 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3449516086071775557, guid: 678d5f9da88056847a69720bdff65bbd, type: 3}
@@ -1593,7 +1588,7 @@ MonoBehaviour:
   m_text: 'Score: '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 42df1c7856584b6b8db9a509b6b10074, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
