@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Characteristics")]
     [SerializeField] float speed = 5f;
+    [SerializeField] private float speedIncreaseAmount = 0.10f;
+    [SerializeField] private float speedIncreaseInterval = 2f;
+    [SerializeField] private float maxSpeed = 20f;
     [SerializeField] int gravity = -20;
     [SerializeField] int slideTime = 1000;
 
@@ -39,8 +42,30 @@ public class PlayerController : MonoBehaviour
         roadName = "";
 
         inputCode = 0;
-
+        StartCoroutine(IncreaseSpeedRoutine());
         dir = new Vector3(0, 0, speed);
+    }
+
+    private IEnumerator IncreaseSpeedRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(speedIncreaseInterval);
+
+            if (speed < maxSpeed)
+            {
+                speed += speedIncreaseAmount;
+                dir = new Vector3(0, 0, speed);
+                if (speed > maxSpeed)
+                {
+                    speed = maxSpeed;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
     }
 
     // Update is called once per frame
