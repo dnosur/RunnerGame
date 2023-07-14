@@ -8,6 +8,7 @@ TagManager:
   - Road
   - RoadComponent
   - Obstruction
+  - Coin
   layers:
   - Default
   - TransparentFX
