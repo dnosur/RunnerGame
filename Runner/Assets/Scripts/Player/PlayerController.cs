@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     [Header("Score")]
     [SerializeField] float scorePoint = 0.1f;
                      int score;
+                     int coins = 0;
 
     //Название дороги, по которой бежит игрок. 
     //Нужно чтоб игрок не вышел за граници имеющихся дорог
@@ -258,6 +259,8 @@ public class PlayerController : MonoBehaviour
 
     public int GetScore() { return score; }
 
+    public int GetCoins() { return coins; }
+
     //Functions
 
     private bool CheckHorizontalMove(ref RaycastHit[] hits, bool side)
@@ -278,5 +281,14 @@ public class PlayerController : MonoBehaviour
         if ((bool)(hits.Length == 1 && hits[0].collider.tag == "RoadComponent") || hits.Length == 0 ) return true;
 
         return false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Coin")
+        {
+            coins += 1;
+            Destroy(other.gameObject);
+        }
     }
 }
