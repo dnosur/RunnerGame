@@ -11,14 +11,23 @@ public class PlayerController : MonoBehaviour
     [Header("Character Controller")]
     [SerializeField] CharacterController characterController;
 
+    [Header("Screen Controllers")]
+    [SerializeField] DeathController deathController;
+
     [Header("Characteristics")]
     [SerializeField] float speed = 5f;
+    [SerializeField] private float speedIncreaseAmount = 0.10f;
+    [SerializeField] private float speedIncreaseInterval = 2f;
+    [SerializeField] private float maxSpeed = 20f;
     [SerializeField] int gravity = -20;
     [SerializeField] int slideTime = 1000;
+
+                     int health = 100;
 
     [Header("Score")]
     [SerializeField] float scorePoint = 0.1f;
                      int score;
+                     int coins = 0;
 
     //Название дороги, по которой бежит игрок. 
     //Нужно чтоб игрок не вышел за граници имеющихся дорог
@@ -39,7 +48,7 @@ public class PlayerController : MonoBehaviour
         roadName = "";
 
         inputCode = 0;
-
+        StartCoroutine(IncreaseSpeedRoutine());
         dir = new Vector3(0, 0, speed);
     }
 
@@ -146,12 +155,22 @@ public class PlayerController : MonoBehaviour
             //Проверяем на возможность передвинуть игрока влево.
             //Нету ли слева посторонних объектов, которые мешают передвижению игрока, и тп
             if(CheckHorizontalMove(ref hits, true)) inputCode = 1;
+            else if (health == 100)
+            {
+                StartCoroutine(Freeze(1));
+            }
+            else { Die(); }
         }
 
         //Вправо
         if (SwipeController.swipeRight && transform.position.x < 2)
         {
             if (CheckHorizontalMove(ref hits, false)) inputCode = 2;
+            else if(health == 100)
+            {
+                StartCoroutine(Freeze(1));
+            }
+            else { Die(); }
         }
 
         //Вверх
@@ -227,11 +246,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Coin")
+        {
+            coins += 1;
+            Destroy(other.gameObject);
+        }
+    }
+
     //Getters & Setters
 
     public string GetRoadName() { return roadName; }
 
     public int GetScore() { return score; }
+
+    public int GetCoins() { return coins; }
 
     //Functions
 
@@ -253,5 +283,49 @@ public class PlayerController : MonoBehaviour
         if ((bool)(hits.Length == 1 && hits[0].collider.tag == "RoadComponent") || hits.Length == 0 ) return true;
 
         return false;
+    }
+
+    private IEnumerator IncreaseSpeedRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(speedIncreaseInterval);
+
+            if (speed < maxSpeed)
+            {
+                speed += speedIncreaseAmount;
+                dir.z = speed;
+                if (speed > maxSpeed)
+                {
+                    speed = maxSpeed;
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+
+    private IEnumerator Freeze(float speed)
+    {
+        float speedTemp = this.speed;
+
+        this.speed = speed;
+        dir.z = speed;
+
+        health = 50;
+
+        yield return new WaitForSeconds(2);
+
+        health = 100;
+        this.speed = speedTemp;
+        dir.z = this.speed;
+    }
+
+    private void Die()
+    {
+        Time.timeScale = 0;
+        deathController.ShowDeathScreen();
     }
 }
