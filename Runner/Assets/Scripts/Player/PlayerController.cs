@@ -14,11 +14,13 @@ public class PlayerController : MonoBehaviour
     [Header("Screen Controllers")]
     [SerializeField] DeathController deathController;
 
-    [Header("Characteristics")]
+    [Header("Speed")]
     [SerializeField] float speed = 5f;
     [SerializeField] private float speedIncreaseAmount = 0.10f;
     [SerializeField] private float speedIncreaseInterval = 2f;
     [SerializeField] private float maxSpeed = 20f;
+
+    [Header("Characteristics")]
     [SerializeField] int gravity = -20;
     [SerializeField] int slideTime = 1000;
 
@@ -120,13 +122,13 @@ public class PlayerController : MonoBehaviour
         start.y += 2.2f;
         start.z += 0.61f;
 
-        RaycastHit[] rhit = Physics.RaycastAll(start, transform.TransformDirection(Vector3.down));
+        RaycastHit[] rhit = Physics.RaycastAll(start, transform.TransformDirection(Vector3.down), 2.2f);
 
         //Если во что-то попали
         if (rhit.Length != 0)
         {
             //Отрисовываем луч к последнему попавшемо объекту
-            Debug.DrawRay(start, transform.TransformDirection(Vector3.down * rhit[0].distance), Color.red);
+            Debug.DrawRay(start, transform.TransformDirection(Vector3.down * rhit[0].distance), Color.yellow);
         }
 
 
@@ -154,23 +156,15 @@ public class PlayerController : MonoBehaviour
         {
             //Проверяем на возможность передвинуть игрока влево.
             //Нету ли слева посторонних объектов, которые мешают передвижению игрока, и тп
-            if(CheckHorizontalMove(ref hits, true)) inputCode = 1;
-            else if (health == 100)
-            {
-                StartCoroutine(Freeze(1));
-            }
-            else { Die(); }
+            if (CheckHorizontalMove(ref hits, true)) inputCode = 1;
+            else SideKick();
         }
 
         //Вправо
         if (SwipeController.swipeRight && transform.position.x < 2)
         {
             if (CheckHorizontalMove(ref hits, false)) inputCode = 2;
-            else if(health == 100)
-            {
-                StartCoroutine(Freeze(1));
-            }
-            else { Die(); }
+            else SideKick();
         }
 
         //Вверх
@@ -221,7 +215,7 @@ public class PlayerController : MonoBehaviour
                     //Останавливаем игру
                     Debug.DrawRay(start, transform.TransformDirection(Vector3.right * hit.distance), Color.red);
                     Debug.Log("Slide hit!");
-                    Time.timeScale = 0;
+                    Die();
                 }
 
                 //Выходим из метода
@@ -235,12 +229,22 @@ public class PlayerController : MonoBehaviour
 
             //Сверху - вниз
             RaycastHit[] rhit = Physics.RaycastAll(start, transform.TransformDirection(Vector3.down), 2.2f);
-            Debug.DrawRay(start, transform.TransformDirection(Vector3.down * rhit[0].distance), Color.red);
+            
+            if(rhit.Length > 0) Debug.DrawRay(start, transform.TransformDirection(Vector3.down * rhit[0].distance), Color.red);
 
             //Если перед игроком препятствие - значит он врезался в препятствие
             if (rhit.Length != 0 && rhit.LastOrDefault(obj => obj.collider.tag == "Obstruction").collider != null)
             { //Останавливаем игру
-                Debug.Log("Hit!");
+                if (rhit[0].distance >= 1.7f)
+                {
+                    LegKick();
+                    Debug.Log("Kick! " + rhit[0].distance);
+                }
+                else
+                {
+                    Debug.Log("Hit! " + rhit[0].distance);
+                }
+
                 Debug.DrawRay(start, transform.TransformDirection(Vector3.down * rhit[0].distance), Color.red);
             }
         }
@@ -280,10 +284,37 @@ public class PlayerController : MonoBehaviour
 
         //Если слева от игрока только дорога, либо вообще ничего (луч не попал даже в дорогу, из-за ограничений по длине)
         //Значит переместиться в указуню сторону можно
-        if ((bool)(hits.Length == 1 && hits[0].collider.tag == "RoadComponent") || hits.Length == 0 ) return true;
+        if (hits.Length == 0) return true;
+        if (hits.Length >= 1 && hits[0].collider.tag == "Obstruction" && hits[0].distance >= 1.7f) return true;
+        if (hits.Length == 1 && hits[0].collider.tag == "RoadComponent") return true;
 
         return false;
     }
+
+    private void Die()
+    {
+        Time.timeScale = 0;
+        deathController.ShowDeathScreen();
+    }
+
+    private void SideKick()
+    {
+        if (health == 100)
+        {
+            StartCoroutine(Freeze(1));
+        }
+        else { Die(); }
+    }
+
+    private void LegKick()
+    {
+        dir.y = 5;
+
+        if (health == 100) { StartCoroutine(Freeze(speed / 2)); }
+        else Die();
+    }
+
+    //Coroutines
 
     private IEnumerator IncreaseSpeedRoutine()
     {
@@ -321,11 +352,5 @@ public class PlayerController : MonoBehaviour
         health = 100;
         this.speed = speedTemp;
         dir.z = this.speed;
-    }
-
-    private void Die()
-    {
-        Time.timeScale = 0;
-        deathController.ShowDeathScreen();
     }
 }

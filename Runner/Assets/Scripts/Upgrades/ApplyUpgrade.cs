@@ -12,7 +12,6 @@ public class ApplyUpgrade : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.gameObject.TryGetComponent(out IUpgrade upgrade))
         {
             upgradeDuration = ChangeUpgradeDuration(other);
