@@ -9,6 +9,8 @@ public class ApplyUpgrade : MonoBehaviour
     [SerializeField] private float jumpUpgradeDuration;
     [SerializeField] private float speedUpgradeDuration;
 
+    [SerializeField] AudioClip upgradeMusic;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,6 +27,7 @@ public class ApplyUpgrade : MonoBehaviour
     {
         Destroy(other.gameObject);
         upgrade.UpgradePlayer();
+        AudioManager.instance.PlayRandomPitch(upgradeMusic);
 
         yield return new WaitForSeconds(upgradeDuration);
 

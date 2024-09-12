@@ -8,6 +8,8 @@ TagManager:
   - Road
   - RoadComponent
   - Obstruction
+  - Coin
+  - Parkour
   layers:
   - Default
   - TransparentFX

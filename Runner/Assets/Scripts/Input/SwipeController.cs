@@ -13,7 +13,31 @@ public class SwipeController : MonoBehaviour
     {
         tap = swipeDown = swipeUp = swipeLeft = swipeRight = false;
 
-        #region ПК-версия
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            swipeLeft = true;
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            swipeRight = true;
+            return;
+        }
+
+        if(Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            swipeUp = true;
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            swipeDown = true;
+            return;
+        }
+
+        #region ??-??????
         if (Input.GetMouseButtonDown(0))
         {
             tap = true;
@@ -27,7 +51,7 @@ public class SwipeController : MonoBehaviour
         }
         #endregion
 
-        #region Мобильная версия
+        #region ????????? ??????
         if (Input.touches.Length > 0)
         {
             if (Input.touches[0].phase == TouchPhase.Began)
@@ -44,7 +68,7 @@ public class SwipeController : MonoBehaviour
         }
         #endregion
 
-        //Просчитать дистанцию
+        //?????????? ?????????
         swipeDelta = Vector2.zero;
         if (isDraging)
         {
@@ -54,10 +78,10 @@ public class SwipeController : MonoBehaviour
                 swipeDelta = (Vector2)Input.mousePosition - startTouch;
         }
 
-        //Проверка на пройденность расстояния
+        //???????? ?? ???????????? ??????????
         if (swipeDelta.magnitude > 100)
         {
-            //Определение направления
+            //??????????? ???????????
             float x = swipeDelta.x;
             float y = swipeDelta.y;
             if (Mathf.Abs(x) > Mathf.Abs(y))
